@@ -22,7 +22,7 @@ CONFIG_SCHEMA = cv.Schema(
     {
         cv.Required(CONF_ID): cv.declare_id(GlobalsComponent),
         cv.Required(CONF_TYPE): cv.string_strict,
-        cv.Optional(CONF_INITIAL_VALUE): cv.string_strict,
+        cv.Optional(CONF_INITIAL_VALUE): cv.string,
         cv.Optional(CONF_RESTORE_VALUE, default=False): cv.boolean,
     }
 ).extend(cv.COMPONENT_SCHEMA)
@@ -60,7 +60,7 @@ async def to_code(config):
     cv.Schema(
         {
             cv.Required(CONF_ID): cv.use_id(GlobalsComponent),
-            cv.Required(CONF_VALUE): cv.templatable(cv.string_strict),
+            cv.Required(CONF_VALUE): cv.templatable(cv.string),
         }
     ),
 )
