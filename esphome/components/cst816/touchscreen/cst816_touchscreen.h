@@ -26,6 +26,7 @@ static const uint8_t CST816_IRQ_EN_MOTION = 0x70;
 
 static const uint8_t CST816S_CHIP_ID = 0xB4;
 static const uint8_t CST816T_CHIP_ID = 0xB5;
+static const uint8_t CST816D_CHIP_ID = 0xB6;
 static const uint8_t CST716_CHIP_ID = 0x20;
 
 class CST816ButtonListener {
@@ -93,6 +94,7 @@ class CST816Touchscreen : public touchscreen::Touchscreen, public i2c::I2CDevice
       case CST716_CHIP_ID:
       case CST816S_CHIP_ID:
       case CST816T_CHIP_ID:
+      case CST816D_CHIP_ID:
         break;
       default:
         this->mark_failed();
