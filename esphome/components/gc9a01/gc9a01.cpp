@@ -90,17 +90,15 @@ void GC9A01::setup() {
   this->cs_->digital_write(true);
 
   this->init_reset_();
-  this->set_timeout(100, [this]() {
-  
-    ESP_LOGD(TAG, "  START");
-    this->dump_config();
-    ESP_LOGD(TAG, "  END");
-  
-    this->display_init_(INITCMD);
-  
-    this->init_internal_(this->get_buffer_length());
-    memset(this->buffer_, 0x00, this->get_buffer_length());
-  });
+
+  ESP_LOGD(TAG, "  START");
+  this->dump_config();
+  ESP_LOGD(TAG, "  END");
+
+  this->display_init_(INITCMD);
+
+  this->init_internal_(this->get_buffer_length());
+  memset(this->buffer_, 0x00, this->get_buffer_length());
 }
 
 void GC9A01::update() {
