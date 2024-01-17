@@ -19,7 +19,7 @@ class GC9A01 : public display::DisplayBuffer,
 
   void update() override;
 
-  float get_setup_priority() const override { return setup_priority::PROCESSOR; }
+  float get_setup_priority() const override { return setup_priority::LATE; }
 
   void set_reset_pin(GPIOPin *value) { this->reset_pin_ = value; }
   void set_dc_pin(GPIOPin *value) { dc_pin_ = value; }
