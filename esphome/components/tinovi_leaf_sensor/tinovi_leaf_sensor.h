@@ -1,40 +1,41 @@
 #pragma once
 
-#include "esphome/components/i2c/i2c.h"
 #include "esphome/core/component.h"
+#include "esphome/components/i2c/i2c.h"
+#include "esphome/components/sensor/sensor.h"
 
 namespace esphome {
-namespace empty_i2c_component {
+namespace tinovi_leaf_sensor {
 
-#define address 0x61 // default address for the sensor
-#define wait_period                                                            \
-  300 // the time in ms to wait to read the data after requesting a new reading
-      // - this is stated by the docs as 100ms, but in the code it's either
-      // 300ms or 400ms. 300ms seems to work.
+#define address 0x61  // default address for the sensor
+#define wait_period \
+  300  // the time in ms to wait to read the data after requesting a new reading
+       // - this is stated by the docs as 100ms, but in the code it's either
+       // 300ms or 400ms. 300ms seems to work.
 
 // Defines copied from Arduino Library
 
-#define  REG_READ_ST    0x01
-#define  REG_TEMP    0x04
-#define  REG_WET     0x05
+#define REG_READ_ST 0x01
+#define REG_TEMP 0x04
+#define REG_WET 0x05
 
-#define  REG_AIR    0x06
-#define  REG_WATER  0x07
+#define REG_AIR 0x06
+#define REG_WATER 0x07
 
-#define  REG_CAP     0x0A
-#define  REG_RES     0x0B
-#define  REG_RT     0x0D
+#define REG_CAP 0x0A
+#define REG_RES 0x0B
+#define REG_RT 0x0D
 
 #define REG_ADDR 0x08
-#define  REG_DATA     0x09
+#define REG_DATA 0x09
 
 // The various states the component can be in
-enum LeafWetnessSensorState {
-  REQUEST, // Request a new measurement
-  WAITING, // Waiting for the measurement
-  READY,   // Ready to request the measurement value
-  READ,    // Requesting the measurement value
-  IDLE     // There is no request in progress
+enum TinvoiLeafSensorState {
+  REQUEST,  // Request a new measurement
+  WAITING,  // Waiting for the measurement
+  READY,    // Ready to request the measurement value
+  READ,     // Requesting the measurement value
+  IDLE      // There is no request in progress
 };
 
 /*
@@ -82,17 +83,19 @@ enum LeafWetnessSensorState {
  *         unit_of_measurement: "%"
  *         accuracy_decimals: 1
  */
-class LeafWetness : public PollingComponent,
-                    public i2c::I2CDevice,
-                    public Sensor {
-
-public:
-  Sensor *temperature_sensor; // The ESPHome temperature sensor
-  Sensor *wetness_sensor;     // The ESPHome wetness sensor
+class TinoviLeafSensor : public i2c::I2CDevice, public PollingComponent, sensor::Sensor {
+ public:
+  Sensor *temperature_sensor;  // The ESPHome temperature sensor
+  Sensor *wetness_sensor;      // The ESPHome wetness sensor
   void setup() override;
   void loop() override;
+  void update() override;
   void dump_config() override;
-}
 
-} // namespace empty_i2c_component
-} // namespace esphome
+ protected:
+  unsigned long startRequest = 0UL;    // The time the REQUEST state is entered
+  TinvoiLeafSensorState state = IDLE;  // The sensor state machine
+};
+
+}  // namespace tinovi_leaf_sensor
+}  // namespace esphome
