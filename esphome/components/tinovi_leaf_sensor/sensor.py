@@ -15,7 +15,7 @@ from esphome.const import (
 DEPENDENCIES = ["i2c"]
 
 tinovi_leaf_sensor_ns = cg.esphome_ns.namespace("tinovi_leaf_sensor")
-TinoviLeafSensorComponent = shtcx_ns.class_(
+TinoviLeafSensorComponent = tinovi_leaf_sensor_ns.class_(
     "TinoviLeafSensorComponent", cg.PollingComponent
 )
 
