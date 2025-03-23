@@ -82,7 +82,7 @@ enum TinvoiLeafSensorState {
  *         unit_of_measurement: "%"
  *         accuracy_decimals: 1
  */
-class TinoviLeafSensor : public i2c::I2CDevice, public PollingComponent, sensor::Sensor {
+class TinoviLeafSensorComponent : public i2c::I2CDevice, public PollingComponent, sensor::Sensor {
  public:
   Sensor *temperature_sensor;  // The ESPHome temperature sensor
   Sensor *wetness_sensor;      // The ESPHome wetness sensor
