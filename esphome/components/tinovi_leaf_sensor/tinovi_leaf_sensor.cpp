@@ -17,7 +17,7 @@ void TinoviLeafSensor::loop() {
   switch (state) {
     case REQUEST:
       // Tell the sensor to start a measurement
-      Wire.beginTransmission(address);
+      Wire.beginTransmission(this->address_);
       Wire.write(REG_READ_ST);
       Wire.endTransmission();
       state = WAITING;
@@ -31,10 +31,10 @@ void TinoviLeafSensor::loop() {
       break;
     case READY:
       // Tell the sensor to send the measurement
-      Wire.beginTransmission(address);
+      Wire.beginTransmission(this->address_);
       Wire.write(REG_DATA);
       Wire.endTransmission();
-      Wire.requestFrom(address, 4);
+      Wire.requestFrom(this->address_, 4);
       state = READ;
     case READ:
       // Read the measurement and publish it
