@@ -47,7 +47,7 @@ void TinoviLeafSensorComponent::loop() {
           float value = ret / 100.0;
           switch (k) {
             case 0:
-              wetness_sensor_->publish_state(value);
+              humidity_sensor_->publish_state(value);
               break;
             case 1:
               temperature_sensor_->publish_state(value);
