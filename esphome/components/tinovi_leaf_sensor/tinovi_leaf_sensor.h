@@ -95,7 +95,7 @@ class TinoviLeafSensorComponent : public i2c::I2CDevice, public PollingComponent
   unsigned long startRequest = 0UL;    // The time the REQUEST state is entered
   TinvoiLeafSensorState state = IDLE;  // The sensor state machine
   Sensor *temperature_sensor_;  // The ESPHome temperature sensor
-  Sensor *wetness_sensor_;      // The ESPHome wetness sensor
+  Sensor *humidity_sensor_;      // The ESPHome wetness sensor
 };
 
 }  // namespace tinovi_leaf_sensor
