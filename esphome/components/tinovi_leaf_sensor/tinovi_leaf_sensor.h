@@ -84,8 +84,8 @@ enum TinvoiLeafSensorState {
  */
 class TinoviLeafSensorComponent : public i2c::I2CDevice, public PollingComponent, sensor::Sensor {
  public:
-  Sensor *temperature_sensor;  // The ESPHome temperature sensor
-  Sensor *wetness_sensor;      // The ESPHome wetness sensor
+  void set_temperature_sensor(sensor::Sensor *temperature_sensor) { temperature_sensor_ = temperature_sensor; }
+  void set_humidity_sensor(sensor::Sensor *humidity_sensor) { humidity_sensor_ = humidity_sensor; }
   void setup() override;
   void loop() override;
   void update() override;
@@ -94,6 +94,8 @@ class TinoviLeafSensorComponent : public i2c::I2CDevice, public PollingComponent
  protected:
   unsigned long startRequest = 0UL;    // The time the REQUEST state is entered
   TinvoiLeafSensorState state = IDLE;  // The sensor state machine
+  Sensor *temperature_sensor_;  // The ESPHome temperature sensor
+  Sensor *wetness_sensor_;      // The ESPHome wetness sensor
 };
 
 }  // namespace tinovi_leaf_sensor
