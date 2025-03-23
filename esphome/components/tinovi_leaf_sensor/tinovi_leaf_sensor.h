@@ -4,10 +4,6 @@
 #include "esphome/components/i2c/i2c.h"
 #include "esphome/components/sensor/sensor.h"
 
-namespace esphome {
-namespace tinovi_leaf_sensor {
-
-#define address 0x61  // default address for the sensor
 #define wait_period \
   300  // the time in ms to wait to read the data after requesting a new reading
        // - this is stated by the docs as 100ms, but in the code it's either
@@ -28,6 +24,9 @@ namespace tinovi_leaf_sensor {
 
 #define REG_ADDR 0x08
 #define REG_DATA 0x09
+
+namespace esphome {
+namespace tinovi_leaf_sensor {
 
 // The various states the component can be in
 enum TinvoiLeafSensorState {
