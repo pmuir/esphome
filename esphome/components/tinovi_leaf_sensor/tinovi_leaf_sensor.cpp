@@ -7,11 +7,11 @@ namespace tinovi_leaf_sensor {
 
 static const char *TAG = "tinovi_leaf_sensor.component";
 
-void TinoviLeafSensor::setup() {
+void TinoviLeafSensorComponent::setup() {
   // no-op
 }
 
-void TinoviLeafSensor::loop() {
+void TinoviLeafSensorComponent::loop() {
   // The state machine
   ESP_LOGVV("tinovi_leaf_wetness", "STATE: %d", state);
   switch (state) {
@@ -60,12 +60,12 @@ void TinoviLeafSensor::loop() {
   }
 }
 
-void TinoviLeafSensor::update() {
+void TinoviLeafSensorComponent::update() {
   // The work is done in loop()
   state = REQUEST;  // Put the sensor into the REQUEST state to start a measurement
 }
 
-void TinoviLeafSensor::dump_config() { ESP_LOGCONFIG(TAG, "Tinovi Leaf Sensor"); }
+void TinoviLeafSensorComponent::dump_config() { ESP_LOGCONFIG(TAG, "Tinovi Leaf Sensor"); }
 
 }  // namespace tinovi_leaf_sensor
 }  // namespace esphome
