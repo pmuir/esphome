@@ -41,7 +41,7 @@ void TinoviLeafSensor::loop() {
       if (Wire.available() == 4) {
         for (int k = 0; k < 2; k++) {
           int16_t ret;
-          byte *pointer = (byte *) &ret;
+          unsigned char *pointer = (unsigned char *) &ret;
           pointer[0] = Wire.read();
           pointer[1] = Wire.read();
           float value = ret / 100.0;
