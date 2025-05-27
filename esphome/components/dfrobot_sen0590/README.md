@@ -1,8 +1,10 @@
+# dfrobot_sen0590
+
 ```yaml
 # example configuration:
 
-tinovi_leaf_sensor:
-  id: tinovi_leaf_sesnor_1_1
+dfrobot_sen0590:
+  id: dfrobot_sen0590_1_1
   address: 0x61
 
 i2c:
