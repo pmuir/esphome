@@ -29,7 +29,6 @@ CONFIG_SCHEMA =  sensor.sensor_schema(
 
 
 async def to_code(config):
-    var = cg.new_Pvariable(config[CONF_ID])
-    await cg.register_component(var, config)
-    await i2c.register_i2c_device(var, config)
-    sens = await sensor.new_sensor(config[CONF_DISTANCE])
+    parent = await cg.get_variable(config[CONF_ID])
+    sens = await sensor.new_sensor(config)
+    cg.add(parent.set_detected_sensor(sens))
