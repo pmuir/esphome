@@ -54,7 +54,7 @@ class DFRobotSen0590 : public i2c::I2CDevice, public PollingComponent, public se
  protected:
     unsigned long startRequest = 0UL; // The time the REQUEST state is entered
     unsigned long startRead = 0UL; // The time the READ state is entered
-    Sen0590SensorState state = IDLE; // The sensor state machine
+    Sen0590SensorState sensor_state_ = IDLE; // The sensor state machine
 };
 
 }  // namespace dfrobot_sen0590

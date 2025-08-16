@@ -15,13 +15,13 @@ void DFRobotSen0590::setup() {
 
 void DFRobotSen0590::loop() {
   // The state machine
-  ESP_LOGVV(TAG, "STATE: %d", state);
-  switch(state) {
+  ESP_LOGVV(TAG, "STATE: %d", sensor_state_);
+  switch(sensor_state_) {
     // Request a measurement is made
     case REQUEST: {
       uint8_t data[2] = {0x10, 0xB0};
       this->write(data, 2);
-      state = READY;
+      sensor_state_ = READY;
       startRequest = millis();
       break;
     }
@@ -35,11 +35,11 @@ void DFRobotSen0590::loop() {
         uint8_t cmd = 0x02;
         if (this->write(&cmd, 1) != i2c::ERROR_OK) {
           ESP_LOGW(TAG, "Failed to request measurement");
-          state = IDLE;
+          sensor_state_ = IDLE;
           return;
         }
       }
-      state = READ;
+      sensor_state_ = READ;
       startRead = millis();
       break;
     case READ:
@@ -52,7 +52,7 @@ void DFRobotSen0590::loop() {
         uint8_t buf[2] = {0};
         if (this->read(buf, 2) != i2c::ERROR_OK) {
           ESP_LOGW(TAG, "Failed to read measurement");
-          state = IDLE;
+          sensor_state_ = IDLE;
           return;
         }
         uint16_t distance = (buf[0] << 8) | buf[1];
@@ -60,7 +60,7 @@ void DFRobotSen0590::loop() {
         ESP_LOGD(TAG, "Distance: %u mm", distance);
         this->publish_state(distance);
       }
-      state = IDLE;
+      sensor_state_ = IDLE;
       break;
     case IDLE:
       // Do nothing, waiting for next update cycle
@@ -70,8 +70,8 @@ void DFRobotSen0590::loop() {
 
 void DFRobotSen0590::update() {
   // The work is done in loop()
-  if (state == IDLE) {
-    state = REQUEST;  // Put the sensor into the REQUEST state to start a measurement
+  if (sensor_state_ == IDLE) {
+    sensor_state_ = REQUEST;  // Put the sensor into the REQUEST state to start a measurement
   }
 }
 
