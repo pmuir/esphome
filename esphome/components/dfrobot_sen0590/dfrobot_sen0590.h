@@ -4,9 +4,8 @@
 #include "esphome/components/i2c/i2c.h"
 #include "esphome/components/sensor/sensor.h"
 
-#define address 0x74 // Default address for the sensor
-#define request_wait_period 50 // Time to wait for a measurement
-#define read_wait_period 20 // Time to wait for a measurement
+#define request_wait_period 50 // Time to wait for a measurement in ms
+#define read_wait_period 20 // Time to wait for a measurement to be ready in ms
 
 namespace esphome {
 namespace dfrobot_sen0590 {
@@ -45,10 +44,8 @@ enum Sen0590SensorState {
  * The precision on this sensor is dependent on what you are measuring the distance towards (as it
  * depends what the laser can bounce off) so using some filters on the raw value is useful.
  */
-class DFRobotSen0590 : public i2c::I2CDevice, public PollingComponent, sensor::Sensor {
+class DFRobotSen0590 : public i2c::I2CDevice, public PollingComponent, public sensor::Sensor {
  public:
-  void set_temperature_sensor(sensor::Sensor *temperature_sensor) { temperature_sensor_ = temperature_sensor; }
-  void set_humidity_sensor(sensor::Sensor *humidity_sensor) { humidity_sensor_ = humidity_sensor; }
   void setup() override;
   void loop() override;
   void update() override;

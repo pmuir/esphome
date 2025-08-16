@@ -11,9 +11,9 @@ from esphome.const import (
 
 DEPENDENCIES = ["i2c"]
 
-dfrobot_sen0590_sensor_ns = cg.esphome_ns.namespace("dfrobot_sen0590_sensor")
-DFRobotSen0590 = dfrobot_sen0590_sensor_ns.class_(
-    "DFRobotSen0590", cg.PollingComponent
+dfrobot_sen0590_ns = cg.esphome_ns.namespace("dfrobot_sen0590")
+DFRobotSen0590 = dfrobot_sen0590_ns.class_(
+    "DFRobotSen0590", cg.PollingComponent, i2c.I2CDevice, sensor.Sensor
 )
 
 CONFIG_SCHEMA =  sensor.sensor_schema(
@@ -29,6 +29,7 @@ CONFIG_SCHEMA =  sensor.sensor_schema(
 
 
 async def to_code(config):
-    parent = await cg.get_variable(config[CONF_ID])
-    sens = await sensor.new_sensor(config)
-    cg.add(parent.set_detected_sensor(sens))
+    var = cg.new_Pvariable(config[CONF_ID])
+    await cg.register_component(var, config)
+    await i2c.register_i2c_device(var, config)
+    await sensor.register_sensor(var, config)

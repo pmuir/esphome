@@ -1,39 +1,40 @@
 #include "esphome/core/log.h"
 #include "dfrobot_sen0590.h"
-#include <Wire.h>
 
 namespace esphome {
 namespace dfrobot_sen0590 {
 
-static const char *TAG = "dfrobot_sen0590.component";
+static const char *TAG = "dfrobot_sen0590.sensor";
 
-void DFRobotSen0590Component::setup() {
-  // no-op
+void DFRobotSen0590::setup() {
+  ESP_LOGCONFIG(TAG, "Setting up DFRobot SEN0590...");
 }
 
-void DFRobotSen0590Component::loop() {
+void DFRobotSen0590::loop() {
   // The state machine
-  ESP_LOGVV("dfrobot_sen0590_wetness", "STATE: %d", state);
+  ESP_LOGVV(TAG, "STATE: %d", state);
   switch(state) {
     // Request a measurement is made
-    case REQUEST:
-      Wire.beginTransmission(address);
-      Wire.write(0x10);
-      Wire.write(0xB0);
-      Wire.endTransmission();
+    case REQUEST: {
+      uint8_t data[2] = {0x10, 0xB0};
+      this->write(data, 2);
       state = READY;
       startRequest = millis();
       break;
+    }
     case READY:
       // Wait for the measurement to be ready
       if (request_wait_period > millis() - startRequest) {
         break;
       }
       // Tell the sensor to send the measurement
-      Wire.beginTransmission(address);
-      Wire.write(0x02);
-      if (Wire.endTransmission() != 0) {
-        return;
+      {
+        uint8_t cmd = 0x02;
+        if (this->write(&cmd, 1) != i2c::ERROR_OK) {
+          ESP_LOGW(TAG, "Failed to request measurement");
+          state = IDLE;
+          return;
+        }
       }
       state = READ;
       startRead = millis();
@@ -44,24 +45,39 @@ void DFRobotSen0590Component::loop() {
         break;
       }
       // Read the measurement and publish it
-      Wire.requestFrom(address, 2);
-      int buf[2] = { 0 };
-      for (int i = 0; i < 2; i++) {
-        buf[i] = Wire.read();
+      {
+        uint8_t buf[2] = {0};
+        if (this->read(buf, 2) != i2c::ERROR_OK) {
+          ESP_LOGW(TAG, "Failed to read measurement");
+          state = IDLE;
+          return;
+        }
+        uint16_t distance = (buf[0] << 8) | buf[1];
+        distance += 10; // Offset correction as per original code
+        ESP_LOGD(TAG, "Distance: %u mm", distance);
+        this->publish_state(distance);
       }
-      int distance = (buf[0] * 0x100 + buf[1] + 10);
-      publish_state(distance);
       state = IDLE;
+      break;
+    case IDLE:
+      // Do nothing, waiting for next update cycle
       break;
   }
 }
 
-void DFRobotSen0590Component::update() {
+void DFRobotSen0590::update() {
   // The work is done in loop()
-  state = REQUEST;  // Put the sensor into the REQUEST state to start a measurement
+  if (state == IDLE) {
+    state = REQUEST;  // Put the sensor into the REQUEST state to start a measurement
+  }
 }
 
-void DFRobotSen0590Component::dump_config() { ESP_LOGCONFIG(TAG, "DFRobot Sen0590"); }
+void DFRobotSen0590::dump_config() { 
+  ESP_LOGCONFIG(TAG, "DFRobot SEN0590:");
+  LOG_I2C_DEVICE(this);
+  LOG_UPDATE_INTERVAL(this);
+  LOG_SENSOR("  ", "Distance", this);
+}
 
 }  // namespace dfrobot_sen0590
 }  // namespace esphome
