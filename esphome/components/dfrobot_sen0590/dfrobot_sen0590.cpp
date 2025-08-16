@@ -19,12 +19,12 @@ void DFRobotSen0590::loop() {
       uint8_t data[2] = {0x10, 0xB0};
       this->write(data, 2);
       state = READY;
-      startRequest = esphome::millis();
+      startRequest = millis();
       break;
     }
     case READY:
       // Wait for the measurement to be ready
-      if (request_wait_period > esphome::millis() - startRequest) {
+      if (request_wait_period > millis() - startRequest) {
         break;
       }
       // Tell the sensor to send the measurement
@@ -37,11 +37,11 @@ void DFRobotSen0590::loop() {
         }
       }
       state = READ;
-      startRead = esphome::millis();
+      startRead = millis();
       break;
     case READ:
       // Wait for the measurement to be ready to read
-      if (read_wait_period > esphome::millis() - startRead) {
+      if (read_wait_period > millis() - startRead) {
         break;
       }
       // Read the measurement and publish it
