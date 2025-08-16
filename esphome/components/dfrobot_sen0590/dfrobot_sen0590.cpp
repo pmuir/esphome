@@ -2,8 +2,6 @@
 #include "dfrobot_sen0590.h"
 #include "esp_timer.h"
 
-uint32_t IRAM_ATTR HOT millis() { return (uint32_t) (esp_timer_get_time() / 1000ULL); }
-
 namespace esphome {
 namespace dfrobot_sen0590 {
 
@@ -22,12 +20,12 @@ void DFRobotSen0590::loop() {
       uint8_t data[2] = {0x10, 0xB0};
       this->write(data, 2);
       sensor_state_ = READY;
-      startRequest = millis();
+      startRequest = this->millis();
       break;
     }
     case READY:
       // Wait for the measurement to be ready
-      if (request_wait_period > millis() - startRequest) {
+      if (request_wait_period > this->millis() - startRequest) {
         break;
       }
       // Tell the sensor to send the measurement
@@ -40,11 +38,11 @@ void DFRobotSen0590::loop() {
         }
       }
       sensor_state_ = READ;
-      startRead = millis();
+      startRead = this->millis();
       break;
     case READ:
       // Wait for the measurement to be ready to read
-      if (read_wait_period > millis() - startRead) {
+      if (read_wait_period > this->millis() - startRead) {
         break;
       }
       // Read the measurement and publish it
@@ -80,6 +78,10 @@ void DFRobotSen0590::dump_config() {
   LOG_I2C_DEVICE(this);
   LOG_UPDATE_INTERVAL(this);
   LOG_SENSOR("  ", "Distance", this);
+}
+
+uint32_t DFRobotSen0590::millis() {
+  return (uint32_t) (esp_timer_get_time() / 1000ULL);
 }
 
 }  // namespace dfrobot_sen0590

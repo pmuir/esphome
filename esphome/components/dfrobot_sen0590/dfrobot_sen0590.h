@@ -3,6 +3,7 @@
 #include "esphome/core/component.h"
 #include "esphome/components/i2c/i2c.h"
 #include "esphome/components/sensor/sensor.h"
+#include "esp_timer.h"
 
 #define request_wait_period 50 // Time to wait for a measurement in ms
 #define read_wait_period 20 // Time to wait for a measurement to be ready in ms
@@ -55,6 +56,9 @@ class DFRobotSen0590 : public i2c::I2CDevice, public PollingComponent, public se
     unsigned long startRequest = 0UL; // The time the REQUEST state is entered
     unsigned long startRead = 0UL; // The time the READ state is entered
     Sen0590SensorState sensor_state_ = IDLE; // The sensor state machine
+
+ private:
+    uint32_t millis();
 };
 
 }  // namespace dfrobot_sen0590
