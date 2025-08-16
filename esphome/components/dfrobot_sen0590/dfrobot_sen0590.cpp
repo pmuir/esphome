@@ -1,5 +1,8 @@
 #include "esphome/core/log.h"
 #include "dfrobot_sen0590.h"
+#include "esp_timer.h"
+
+uint32_t IRAM_ATTR HOT millis() { return (uint32_t) (esp_timer_get_time() / 1000ULL); }
 
 namespace esphome {
 namespace dfrobot_sen0590 {
